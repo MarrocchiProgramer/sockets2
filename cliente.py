@@ -27,6 +27,7 @@ def main():
 
         # Si la contraseña está completa, mostramos el mensaje de ganador y cerramos la conexión
         if len(contraseña) == 5:
+            print("La contraseña es: ", contraseña)
             print("Has ganado!")
             clientsocket.close()
             break

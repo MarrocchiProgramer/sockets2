@@ -26,7 +26,7 @@ def main():
         intento = connection.recv(1024).decode("utf-8")
 
         # Si el intento es correcto, actualizamos la contraseña
-        if intento in contraseña:
+        if intento not in contraseña:
             contraseña = contraseña.replace(intento, "")
             connection.sendall(b"Intento correcto")
         else:
