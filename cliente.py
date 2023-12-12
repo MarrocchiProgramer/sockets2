@@ -4,13 +4,23 @@ def main():
     # Creamos el socket
     clientsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # Conectamos al servidor en el puerto 8080
+    # Conectamos al servidor
     clientsocket.connect(("localhost", 8080))
 
+    # Mostramos un menú
+    print("Facil: 1 ,Medio: 2, Dificil: 3")
+
+    # Leemos la entrada del usuario
+    nivel = input("Ingrese el nivel de dificultad: ")
+
+    # Enviamos el nivel de dificultad al servidor
+    clientsocket.sendall(nivel.encode("utf-8"))
+
+    # Recibimos la contraseña del servidor
+    contraseña = clientsocket.recv(1024).decode("utf-8")
+
     # Iniciamos el juego
-    intentos = 0
-    contraseña = ""
-    while intentos < 15:
+    while True:
         # Solicitamos un intento al usuario
         intento = input("Intento (1-9): ")
 
@@ -20,23 +30,12 @@ def main():
         # Recibimos la respuesta del servidor
         respuesta = clientsocket.recv(1024).decode("utf-8")
 
-        # Si la respuesta es "Intento correcto", actualizamos la contraseña
-        if respuesta == "Intento correcto":
-            print("Has adivinado un número correcto!")
-            contraseña += intento
+        # Imprimimos la respuesta del servidor
+        print(respuesta)
 
-        # Si la contraseña está completa, mostramos el mensaje de ganador y cerramos la conexión
-        if len(contraseña) == 5:
-            print("La contraseña es: ", contraseña)
-            print("Has ganado!")
-            clientsocket.close()
+        # Si el usuario ha ganado, terminamos el juego
+        if respuesta == "Has ganado!":
             break
-
-        # Si la contraseña no está completa, la mostramos parcialmente
-        print("Contraseña actualizada:", contraseña[:len(contraseña)])
-
-        # Incrementamos el contador de intentos
-        intentos += 1
 
     # Cerramos la conexión
     clientsocket.close()
